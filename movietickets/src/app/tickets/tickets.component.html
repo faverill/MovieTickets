@@ -1,7 +1,27 @@
 
 <div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <input id="ticketFirstName" class="form-control" placeholder="Your First Name" 
+                style="margin-bottom:5px;" type="text" [(ngModel)]="ticketFirstName"/>
+            <input id="ticketLastName" class="form-control" placeholder="Your Last Name" 
+                style="margin-bottom:5px;" type="text" [(ngModel)]="ticketLastName"/>
+            <input id="ticketEmailAddress" class="form-control" placeholder="Your Email" 
+                style="margin-bottom:2px;" type="text" [(ngModel)]="ticketEmailAddress"/>
+            <input id="ticketPhoneNumber" class="form-control" placeholder="Mobile Phone For Texting" 
+                style="margin-bottom:2px;" type="text" [(ngModel)]="ticketPhoneNumber"/>
+            <input id="ticketNumberOfPeople" class="form-control" placeholder="No. People in Your Family Group" 
+                style="margin-bottom:2px;" type="number" [(ngModel)]="ticketNumberOfPeople"/>
+        </div>
+        <div class="col-auto" style="margin-bottom: 20px;">
+            <button class="btn btn-primary" (click) = "addTicket()">
+                Save Ticket
+            </button>
+        </div>
+    </div>
 
-    <div class="m-2">
+
+    <div>
         <table id="ticketRoster" class="table table-striped table-bordered table-sm">
             <thead>
                 <tr><th>#</th><th>First Name</th><th>Last Name</th>
