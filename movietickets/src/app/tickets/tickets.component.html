@@ -27,7 +27,7 @@
                 <tr><th>#</th><th>First Name</th><th>Last Name</th>
                     <th>Email Address</th>
                     <th>Mobile Phone</th><th>Number of People</th>
-                    <th>Registration Date</th></tr>
+                    <th>Registration Date</th><th>Delete</th></tr>
             </thead>
             <tbody>
                 <tr *ngFor="let ticket of listTickets; let i = index">
@@ -38,6 +38,8 @@
                     <td>{{ticket.ticketPhoneNumber}}</td>
                     <td>{{ticket.ticketNumberOfPeople}}</td>
                     <td>{{ticket.ticketRegistrationDate | date:'short'}}</td>
+                    <td><button class="btn btn-danger" 
+                        (click)="deleteTicket(ticket.ticketId)">Delete</button></td>
                 </tr>
             </tbody>
         </table>

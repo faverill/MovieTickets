@@ -55,6 +55,15 @@ export class TicketsComponent implements OnInit{
     this.tickets.push(ticket);
   }
 
+  deleteTicket(id:string) {
+    for (var i = 0; i<this.tickets.length; i++) {
+      if (this.tickets[i].ticketId == id) {
+        this.tickets.splice(i,1);
+        break;
+      }
+    }
+  }
+
 
   get listTickets() {
 
