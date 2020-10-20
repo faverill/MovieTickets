@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Ticket } from "../models/Ticket";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +20,8 @@ export class TicketsComponent implements OnInit{
   ticketRegistrationDate: number;
 
   ticketCount: number = 0;
+
+  editOnSwitch: boolean = false;
  
   constructor() { 
         
@@ -53,6 +56,7 @@ export class TicketsComponent implements OnInit{
         this.ticketEmailAddress,this.ticketPhoneNumber,this.ticketNumberOfPeople,
           this.ticketRegistrationDate);
     this.tickets.push(ticket);
+    this.cancelTicket();
   }
 
   deleteTicket(id:string) {
@@ -62,6 +66,51 @@ export class TicketsComponent implements OnInit{
         break;
       }
     }
+    this.cancelTicket();
+  }
+
+  editTicket(id:string) {
+    this.editOnSwitch = true;
+    for (var i = 0; i<this.tickets.length; i++) {
+      if (this.tickets[i].ticketId == id) {
+        this.ticketId = id;
+        this.ticketFirstName = this.tickets[i].ticketFirstName;
+        this.ticketLastName = this.tickets[i].ticketLastName;
+        this.ticketEmailAddress = this.tickets[i].ticketEmailAddress;
+        this.ticketPhoneNumber = this.tickets[i].ticketPhoneNumber;
+        this.ticketNumberOfPeople = this.tickets[i].ticketNumberOfPeople;
+        this.ticketRegistrationDate = this.tickets[i].ticketRegistrationDate;
+        break;
+      }
+    }
+  }
+
+  updateTicket() {
+    this.editOnSwitch = false;
+    for (var i = 0; i<this.tickets.length; i++) {
+      if (this.tickets[i].ticketId == this.ticketId) {
+        this.ticketId = this.ticketId;
+        this.tickets[i].ticketFirstName = this.ticketFirstName;
+        this.tickets[i].ticketLastName = this.ticketLastName;
+        this.tickets[i].ticketEmailAddress = this.ticketEmailAddress;
+        this.tickets[i].ticketPhoneNumber = this.ticketPhoneNumber;
+        this.tickets[i].ticketNumberOfPeople = parseInt(this.ticketPhoneNumber,10);
+        this.tickets[i].ticketRegistrationDate = this.ticketRegistrationDate;
+        break;
+      }
+    }
+    this.cancelTicket();
+  }
+
+  cancelTicket() {
+    this.editOnSwitch = false;
+    this.ticketId = "";
+    this.ticketFirstName = "";
+    this.ticketLastName = "";
+    this.ticketEmailAddress = "";
+    this.ticketPhoneNumber = "";
+    this.ticketNumberOfPeople = undefined;
+    this.ticketRegistrationDate = undefined;
   }
 
 
