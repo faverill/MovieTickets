@@ -3,6 +3,8 @@ import { Ticket } from "../models/Ticket";
 //FormsModule does not have to be imported here as long as it is in app.module.ts
 //import { FormsModule } from '@angular/forms';
 
+import { CrudService } from "../services/crud.service";
+
 @Component({
   selector: 'app-root',
   templateUrl: './tickets.component.html'
@@ -23,14 +25,16 @@ export class TicketsComponent implements OnInit{
   ticketCount: number = 0;
 
   editOnSwitch: boolean = false;
+  currentUserEmail: string;
  
-  constructor() { 
+  constructor(private crudService: CrudService) { 
         
   }//End of Constructor
 
   ngOnInit() {
 
     this.loadTickets();
+    
         
   }  //End of ngOnInit
 
@@ -41,12 +45,21 @@ export class TicketsComponent implements OnInit{
   
   loadTickets() {
 
-    this.tickets = [new Ticket("1","George","Washington",
-    "gwashington@gmail.com","8765554444",4,Date.now()),
-    new Ticket("2","John","Adams","jadams@gmail.com","4567778888",5,Date.now())];
-
-    this.ticketCount = 2;
-
+    this.crudService.readAllTickets().subscribe(data => {
+      this.tickets = data.map(e => {
+        return {
+          ticketId: e.payload.doc.data()['ticketId'],
+          ticketFirstName: e.payload.doc.data()['ticketFirstName'],
+          ticketLastName: e.payload.doc.data()['ticketLastName'],
+          ticketEmailAddress: e.payload.doc.data()['ticketEmailAddress'],
+          ticketPhoneNumber: e.payload.doc.data()['ticketPhoneNumber'],
+          ticketNumberOfPeople: e.payload.doc.data()['ticketNumberOfPeople'],
+          ticketRegistrationDate: e.payload.doc.data()['ticketRegistrationDate']
+        }
+      })
+    });
+  
+    
   } //End of loadtickets
 
   addTicket() {
@@ -55,16 +68,39 @@ export class TicketsComponent implements OnInit{
       return;
     }
 
-    
+    let randInteger = Math.floor((Math.random() * 10000000000) + 1).toString();
+    this.ticketId = randInteger;
+    let nowsDate = Date.now();
+    this.ticketRegistrationDate = nowsDate;
+    this.currentUserEmail = this.ticketEmailAddress;
 
-    this.ticketCount += 1;
-    this.ticketId = this.ticketCount.toString();
-    this.ticketRegistrationDate = Date.now();
+    let record = {};
+    
+    record["ticketId"] = randInteger;
+    record["ticketFirstName"] = this.ticketFirstName;
+    record["ticketLastName"] = this.ticketLastName;
+    record["ticketEmailAddress"] = this.ticketEmailAddress;
+    record["ticketPhoneNumber"] = this.ticketPhoneNumber;
+    record["ticketNumberOfPeople"] = this.ticketNumberOfPeople;
+    record["ticketRegistrationDate"] = nowsDate;
+    console.log("Adding ticket whose RegistrarName is " + this.ticketFirstName + " " + this.ticketLastName);
+    
+    this.crudService.createNewTicket(record).then(resp => {
+      this.currentUserEmail = this.ticketEmailAddress;
+      console.log("We added a ticket with resp:")
+      console.log(resp);
+    })
+      .catch(error => {
+        console.log(error);
+    });
+    
     let ticket = new Ticket(this.ticketId,this.ticketFirstName,this.ticketLastName,
         this.ticketEmailAddress,this.ticketPhoneNumber,this.ticketNumberOfPeople,
           this.ticketRegistrationDate);
     this.tickets.push(ticket);
+    
     this.cancelTicket();
+
   }
 
   deleteTicket(id:string) {
@@ -83,6 +119,7 @@ export class TicketsComponent implements OnInit{
         break;
       }
     }
+    this.crudService.deleteTicket(id);
     this.cancelTicket();
   }
 
@@ -108,10 +145,18 @@ export class TicketsComponent implements OnInit{
       return;
     }
 
-    this.editOnSwitch = false;
+    let record = {};
+    
+    record["ticketId"] = this.ticketId;
+    record["ticketFirstName"] = this.ticketFirstName;
+    record["ticketLastName"] = this.ticketLastName;
+    record["ticketEmailAddress"] = this.ticketEmailAddress;
+    record["ticketPhoneNumber"] = this.ticketPhoneNumber;
+    record["ticketNumberOfPeople"] = this.ticketNumberOfPeople;
+    record["ticketRegistrationDate"] = this.ticketRegistrationDate;
 
-  
-
+    this.crudService.updateTicket(this.ticketId,record);
+    
     for (var i = 0; i<this.tickets.length; i++) {
       if (this.tickets[i].ticketId == this.ticketId) {
         this.ticketId = this.ticketId;
@@ -124,6 +169,8 @@ export class TicketsComponent implements OnInit{
         break;
       }
     }
+
+    this.editOnSwitch = false;
     this.cancelTicket();
   }
 

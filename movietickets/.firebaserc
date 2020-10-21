@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "movietickets-ddf8a"
+  },
+  "targets": {
+    "movietickets-ddf8a": {
+      "hosting": {
+        "movietickets": [
+          "movietickets-ddf8a"
+        ]
+      }
+    }
+  }
+}
