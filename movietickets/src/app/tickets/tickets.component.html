@@ -23,7 +23,7 @@
                 <button style="margin-top:4px;" class="btn btn-primary" (click) = "updateTicket()">
                     Update Ticket
                 </button><br/>
-                <button style="margin-top:4px;" class="btn btn-danger" (click) = "deleteTicket(this.ticketId)">
+                <button style="margin-top:4px;" class="btn btn-danger" (click) = "deleteTicket()">
                     Delete Ticket
                 </button><br/>
                 <button style="margin-top:4px;" class="btn btn-info" (click) = "cancelTicket()">
@@ -52,7 +52,7 @@
                     <td>{{ticket.ticketNumberOfPeople}}</td>
                     <td>{{ticket.ticketRegistrationDate | date:'short'}}</td>
                     <td><button class="btn btn-info" 
-                        (click)="editTicket(ticket.ticketId)">Edit</button></td>
+                        (click)="editTicket(ticket.id)">Edit</button></td>
                 </tr>
             </tbody>
         </table>

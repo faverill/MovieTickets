@@ -22,7 +22,6 @@ export class TicketsComponent implements OnInit{
   ticketNumberOfPeople: number;
   ticketRegistrationDate: number;
 
-  ticketCount: number = 0;
 
   editOnSwitch: boolean = false;
   currentUserEmail: string;
@@ -48,7 +47,7 @@ export class TicketsComponent implements OnInit{
     this.crudService.readAllTickets().subscribe(data => {
       this.tickets = data.map(e => {
         return {
-          ticketId: e.payload.doc.data()['ticketId'],
+          id: e.payload.doc.id,
           ticketFirstName: e.payload.doc.data()['ticketFirstName'],
           ticketLastName: e.payload.doc.data()['ticketLastName'],
           ticketEmailAddress: e.payload.doc.data()['ticketEmailAddress'],
@@ -68,15 +67,15 @@ export class TicketsComponent implements OnInit{
       return;
     }
 
-    let randInteger = Math.floor((Math.random() * 10000000000) + 1).toString();
-    this.ticketId = randInteger;
+    //let randInteger = Math.floor((Math.random() * 10000000000) + 1).toString();
+    //this.ticketId = randInteger;
     let nowsDate = Date.now();
     this.ticketRegistrationDate = nowsDate;
     this.currentUserEmail = this.ticketEmailAddress;
 
     let record = {};
     
-    record["ticketId"] = randInteger;
+   
     record["ticketFirstName"] = this.ticketFirstName;
     record["ticketLastName"] = this.ticketLastName;
     record["ticketEmailAddress"] = this.ticketEmailAddress;
@@ -94,16 +93,18 @@ export class TicketsComponent implements OnInit{
         console.log(error);
     });
     
+    /*
     let ticket = new Ticket(this.ticketId,this.ticketFirstName,this.ticketLastName,
         this.ticketEmailAddress,this.ticketPhoneNumber,this.ticketNumberOfPeople,
           this.ticketRegistrationDate);
     this.tickets.push(ticket);
-    
+    */
+    this.loadTickets();
     this.cancelTicket();
 
   }
 
-  deleteTicket(id:string) {
+  deleteTicket() {
     
     var r = confirm("Are you sure you want to delete " +
       this.ticketFirstName + " " + this.ticketLastName +"'s ticket? (Click OK for yes, or Cancel for no.)");
@@ -114,20 +115,20 @@ export class TicketsComponent implements OnInit{
       }
       
     for (var i = 0; i<this.tickets.length; i++) {
-      if (this.tickets[i].ticketId == id) {
+      if (this.tickets[i].id == this.ticketId) {
         this.tickets.splice(i,1);
         break;
       }
     }
-    this.crudService.deleteTicket(id);
+    this.crudService.deleteTicket(this.ticketId);
     this.cancelTicket();
   }
 
   editTicket(id:string) {
     this.editOnSwitch = true;
+    this.ticketId = id;
     for (var i = 0; i<this.tickets.length; i++) {
-      if (this.tickets[i].ticketId == id) {
-        this.ticketId = id;
+      if (this.tickets[i].id == id) {
         this.ticketFirstName = this.tickets[i].ticketFirstName;
         this.ticketLastName = this.tickets[i].ticketLastName;
         this.ticketEmailAddress = this.tickets[i].ticketEmailAddress;
@@ -147,7 +148,6 @@ export class TicketsComponent implements OnInit{
 
     let record = {};
     
-    record["ticketId"] = this.ticketId;
     record["ticketFirstName"] = this.ticketFirstName;
     record["ticketLastName"] = this.ticketLastName;
     record["ticketEmailAddress"] = this.ticketEmailAddress;
@@ -158,8 +158,8 @@ export class TicketsComponent implements OnInit{
     this.crudService.updateTicket(this.ticketId,record);
     
     for (var i = 0; i<this.tickets.length; i++) {
-      if (this.tickets[i].ticketId == this.ticketId) {
-        this.ticketId = this.ticketId;
+      if (this.tickets[i].id == this.ticketId) {
+        
         this.tickets[i].ticketFirstName = this.ticketFirstName;
         this.tickets[i].ticketLastName = this.ticketLastName;
         this.tickets[i].ticketEmailAddress = this.ticketEmailAddress;
@@ -187,9 +187,17 @@ export class TicketsComponent implements OnInit{
 
 
   get listTickets() {
+      if(this.tickets == undefined ) { return null; }
 
-      return this.tickets;
-
+      return this.tickets.sort(function(a,b) {
+        if(a.ticketLastName < b.ticketLastName) {return -1;}
+        if(a.ticketLastName > b.ticketLastName) {return 1;}
+        if(a.ticketLastName == b.ticketLastName) {
+          if(a.ticketFirstName < b.ticketFirstName) {return -1;}
+          if(a.ticketFirstName > b.ticketFirstName) {return 1;}
+        }
+        return 0;
+      }) //End of return this.sort(function(a,b){
   }
 
   emailIsInvalid(email: string){

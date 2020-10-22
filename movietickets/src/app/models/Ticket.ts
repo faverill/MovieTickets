@@ -1,16 +1,16 @@
 export class Ticket {
-    ticketId: string;
+    id: string;
     ticketFirstName: string;
     ticketLastName: string;
     ticketEmailAddress: string;
     ticketPhoneNumber: string;
     ticketNumberOfPeople: number;
     ticketRegistrationDate: number;
-    constructor(ticketId: string, ticketFirstName: string, ticketLastName: string,
+    constructor(id: string, ticketFirstName: string, ticketLastName: string,
         ticketEmailAddress: string, ticketPhoneNumber: string,
         ticketNumberOfPeople: number, 
         ticketRegistrationDate: number) {
-        this.ticketId = ticketId;
+        this.id = id;
         this.ticketFirstName = ticketFirstName;
         this.ticketLastName = ticketLastName;
         this.ticketEmailAddress = ticketEmailAddress;
