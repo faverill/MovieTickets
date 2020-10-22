@@ -16,7 +16,15 @@ export class CrudService {
   ) { }
 
   
-  createNewTicket(record) {
+  createNewTicket(ticket) {
+    let record = {};
+      //record["ticketId"] = ticket.ticketId;
+      record["ticketFirstName"] = ticket.ticketFirstName;
+      record["ticketLastName"] = ticket.ticketLastName;
+      record["ticketEmailAddress"] = ticket.ticketEmailAddress;
+      record["ticketPhoneNumber"] = ticket.ticketPhoneNumber;
+      record["ticketNumberOfPeople"] = ticket.ticketNumberOfPeople;
+      record["ticketRegistrationDate"] = ticket.ticketRegistrationDate;
     return this.firestore.collection('Tickets').add(record);
   }
 
@@ -60,7 +68,15 @@ export class CrudService {
         return myTickets;
   }
 
-  updateTicket(recordId,record){
+  updateTicket(recordId,ticket: Ticket){
+    let record = {};
+      record["id"] = ticket.id;
+      record["ticketFirstName"] = ticket.ticketFirstName;
+      record["ticketLastName"] = ticket.ticketLastName;
+      record["ticketEmailAddress"] = ticket.ticketEmailAddress;
+      record["ticketPhoneNumber"] = ticket.ticketPhoneNumber;
+      record["ticketNumberOfPeople"] = ticket.ticketNumberOfPeople;
+      record["ticketRegistrationDate"] = ticket.ticketRegistrationDate;
     this.firestore.doc('Tickets/' + recordId).update(record);
   }
 

@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Ticket } from "../models/Ticket";
 //FormsModule does not have to be imported here as long as it is in app.module.ts
 //import { FormsModule } from '@angular/forms';
 
-import { CrudService } from "../services/crud.service";
+import { CrudRepository } from "../services/crud.repository";
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,7 @@ import { CrudService } from "../services/crud.service";
 })
 
 
-export class TicketsComponent implements OnInit{
+export class TicketsComponent {
   
   tickets: Ticket[];
   ticketId: string = "";
@@ -26,40 +26,14 @@ export class TicketsComponent implements OnInit{
   editOnSwitch: boolean = false;
   currentUserEmail: string;
  
-  constructor(private crudService: CrudService) { 
-        
+  constructor(private crudRepository: CrudRepository) { 
+    
   }//End of Constructor
 
-  ngOnInit() {
-
-    this.loadTickets();
-    
-        
-  }  //End of ngOnInit
 
   logout() {
     window.location.reload(true); 
   }
-
-  
-  loadTickets() {
-
-    this.crudService.readAllTickets().subscribe(data => {
-      this.tickets = data.map(e => {
-        return {
-          id: e.payload.doc.id,
-          ticketFirstName: e.payload.doc.data()['ticketFirstName'],
-          ticketLastName: e.payload.doc.data()['ticketLastName'],
-          ticketEmailAddress: e.payload.doc.data()['ticketEmailAddress'],
-          ticketPhoneNumber: e.payload.doc.data()['ticketPhoneNumber'],
-          ticketNumberOfPeople: e.payload.doc.data()['ticketNumberOfPeople'],
-          ticketRegistrationDate: e.payload.doc.data()['ticketRegistrationDate']
-        }
-      })
-    });
-  
-    
-  } //End of loadtickets
 
   addTicket() {
 
@@ -67,39 +41,13 @@ export class TicketsComponent implements OnInit{
       return;
     }
 
-    //let randInteger = Math.floor((Math.random() * 10000000000) + 1).toString();
-    //this.ticketId = randInteger;
-    let nowsDate = Date.now();
-    this.ticketRegistrationDate = nowsDate;
-    this.currentUserEmail = this.ticketEmailAddress;
-
-    let record = {};
-    
-   
-    record["ticketFirstName"] = this.ticketFirstName;
-    record["ticketLastName"] = this.ticketLastName;
-    record["ticketEmailAddress"] = this.ticketEmailAddress;
-    record["ticketPhoneNumber"] = this.ticketPhoneNumber;
-    record["ticketNumberOfPeople"] = this.ticketNumberOfPeople;
-    record["ticketRegistrationDate"] = nowsDate;
-    console.log("Adding ticket whose RegistrarName is " + this.ticketFirstName + " " + this.ticketLastName);
-    
-    this.crudService.createNewTicket(record).then(resp => {
-      this.currentUserEmail = this.ticketEmailAddress;
-      console.log("We added a ticket with resp:")
-      console.log(resp);
-    })
-      .catch(error => {
-        console.log(error);
-    });
-    
-    /*
-    let ticket = new Ticket(this.ticketId,this.ticketFirstName,this.ticketLastName,
-        this.ticketEmailAddress,this.ticketPhoneNumber,this.ticketNumberOfPeople,
-          this.ticketRegistrationDate);
-    this.tickets.push(ticket);
-    */
-    this.loadTickets();
+    this.ticketId = "";
+    this.ticketRegistrationDate = Date.now();
+    let ticket = new Ticket(this.ticketId,this.ticketFirstName,
+                  this.ticketLastName,this.ticketEmailAddress,
+                  this.ticketPhoneNumber,this.ticketNumberOfPeople,
+                  this.ticketRegistrationDate);
+    this.crudRepository.saveTicket(ticket);
     this.cancelTicket();
 
   }
@@ -120,14 +68,22 @@ export class TicketsComponent implements OnInit{
         break;
       }
     }
-    this.crudService.deleteTicket(this.ticketId);
+    this.crudRepository.deleteTicket(this.ticketId);
     this.cancelTicket();
   }
 
   editTicket(id:string) {
+
+    this.tickets = this.crudRepository.tickets;
+    //this.tickets = this.listTickets;
+    //console.log("In editTicket of tickets.component with this.tickets:");
+    //console.log(this.tickets);
+
     this.editOnSwitch = true;
     this.ticketId = id;
+    
     for (var i = 0; i<this.tickets.length; i++) {
+      
       if (this.tickets[i].id == id) {
         this.ticketFirstName = this.tickets[i].ticketFirstName;
         this.ticketLastName = this.tickets[i].ticketLastName;
@@ -145,17 +101,12 @@ export class TicketsComponent implements OnInit{
     if (this.ticketDataIsInvalid()){
       return;
     }
-
-    let record = {};
     
-    record["ticketFirstName"] = this.ticketFirstName;
-    record["ticketLastName"] = this.ticketLastName;
-    record["ticketEmailAddress"] = this.ticketEmailAddress;
-    record["ticketPhoneNumber"] = this.ticketPhoneNumber;
-    record["ticketNumberOfPeople"] = this.ticketNumberOfPeople;
-    record["ticketRegistrationDate"] = this.ticketRegistrationDate;
-
-    this.crudService.updateTicket(this.ticketId,record);
+    let ticket = new Ticket(this.ticketId,this.ticketFirstName,
+                      this.ticketLastName,this.ticketEmailAddress,
+                      this.ticketPhoneNumber,this.ticketNumberOfPeople,
+                      this.ticketRegistrationDate);
+    this.crudRepository.saveTicket(ticket);
     
     for (var i = 0; i<this.tickets.length; i++) {
       if (this.tickets[i].id == this.ticketId) {
@@ -186,8 +137,14 @@ export class TicketsComponent implements OnInit{
   }
 
 
-  get listTickets() {
+  get listTickets(): Ticket[] {
+      /*
       if(this.tickets == undefined ) { return null; }
+      */
+      //return this.crudRepository.loadTickets();
+
+      //this.tickets = this.crudRepository.loadTickets();
+      this.tickets = this.crudRepository.tickets;
 
       return this.tickets.sort(function(a,b) {
         if(a.ticketLastName < b.ticketLastName) {return -1;}
@@ -198,6 +155,8 @@ export class TicketsComponent implements OnInit{
         }
         return 0;
       }) //End of return this.sort(function(a,b){
+      
+
   }
 
   emailIsInvalid(email: string){

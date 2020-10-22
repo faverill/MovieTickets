@@ -2,6 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+import { CrudRepository } from './services/crud.repository';
+//import { CrudService } from './services/crud.service';
+
 // >npm install --save firebase @angular/fire //
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
@@ -21,7 +24,7 @@ import { TicketsComponent } from '../app/tickets/tickets.component';
     AngularFirestoreModule,
     AngularFireDatabaseModule
   ],
-  providers: [],
+  providers: [CrudRepository],
   bootstrap: [TicketsComponent]
 })
 export class AppModule { }
