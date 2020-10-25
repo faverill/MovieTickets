@@ -18,10 +18,39 @@ export class CrudRepository {
     ticketNumberOfPeople: number;
     ticketRegistrationDate: number;
 
-    currentUserEmail: string;
+    notAdmin: boolean = false;
+
+
+    
+
+    currentUserEmail: string = "faverill45@gmail.com";
+    //myTickets: Ticket[] = [];
 
 
     constructor(private crudService: CrudService) {
+
+      if (this.notAdmin){
+      var myTickets = this.tickets;
+      crudService.readSomeTickets(this.currentUserEmail).then(function(result){
+        //console.log("In crud.repository with result:");
+        //console.log(result);
+        
+        result.forEach(function(doc){
+          var myTicket  = new Ticket(doc.id, doc.data().ticketFirstName, doc.data().ticketLastName, doc.data().ticketEmailAddress,
+                  doc.data().ticketPhoneNumber, doc.data().ticketNumberOfPeople,
+                  doc.data().ticketRegistrationDate);
+          myTickets.push(myTicket);
+          
+          console.log("myTickets:");
+          console.log(myTickets);
+        });
+        //console.log("Finally, this.tickets:");
+        //console.log(this.tickets);
+        
+      });
+    } else {
+      //This is a subscription to the Listener (Observable) being returned by readAllTickets
+      
       crudService.readAllTickets().subscribe(data => {
         this.tickets = data.map(e => {
           return {
@@ -38,6 +67,39 @@ export class CrudRepository {
         console.log(this.tickets);
         return this.tickets;
       });
+    }
+      
+      /*
+      crudService.readSomeTickets(this.currentUserEmail).then(function(result){
+        console.log("crudService.readSomeTickets is back, with result:");
+        console.log(result);
+        console.log("Now will copy cars from crud to myCars:");
+        
+        result.forEach(function(doc){
+          var myTicket  = new Ticket(doc.id, doc.ticketFirstName, doc.ticketLastName, doc.ticketEmailAddress,
+                  doc.ticketPhoneNumber, doc.ticketNumberOfPeople,
+                  doc.ticketRegistrationDate);
+          this.myTickets.push(myTicket);
+          
+          console.log("myTickets:");
+          console.log(this.myTickets);
+        });
+        console.log("Finally, myTickets:");
+        console.log(this.myTickets);
+        // Do I finish up here. This gets printed last.
+        
+      });
+  
+      //This code appears to be never reached! But, this.children = myKids is run.??
+      //console.log("Setting this.children = myKids");
+      //alert("setting this.children = myKids");
+      this.tickets = this.myTickets;
+      
+      //console.log("this.crudService.read_SomeStudents is returning, with this.children:");
+      //console.log(this.children);
+      // Or do I finish up here. This gets printed first.
+      */
+
 
     }
 
@@ -49,7 +111,7 @@ export class CrudRepository {
     
     } //End of loadtickets
     */
-   
+
 
     saveTicket(ticket:Ticket) {
 
