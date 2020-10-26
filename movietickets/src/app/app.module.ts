@@ -13,18 +13,27 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 
 import { TicketsComponent } from '../app/tickets/tickets.component';
+import { LoggingComponent } from '../app/logging/logging.component';
+import { RouterModule } from '@angular/router';
+import { AuthService } from '../app/services/auth.service';
+import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [
-    TicketsComponent
+    AppComponent, TicketsComponent, LoggingComponent
   ],
   imports: [
     BrowserModule, FormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
-    AngularFireDatabaseModule
+    AngularFireDatabaseModule,
+    RouterModule.forRoot([
+      {path:"logging",component:LoggingComponent},  
+      {path:"tickets",component:TicketsComponent},
+      {path:"**",redirectTo:"logging"}
+    ])
   ],
-  providers: [CrudRepository],
-  bootstrap: [TicketsComponent]
+  providers: [CrudRepository,AuthService],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,0 +1,47 @@
+<div class="d-flex justify-content-center">
+    <div style="margin-top:45px;" [style.display]="!spinnerOn? 'none' : 'block'"><strong>Standby; We're Loading........&nbsp;&nbsp;&nbsp;</strong></div>
+    <div class="loader text-center" [style.display]="!spinnerOn? 'none' : 'block'"></div>
+</div>
+
+<div class="container-fluid" [style.display]="spinnerOn? 'none' : 'block'">
+    
+    <h4 class="bg-primary text-left text-white p-2">
+        Please either create an account by clicking "Signup" or 
+        click "Login" if you already have an account. Of course, 
+        if you "Signin with Google," you don't need to enter
+        an email or password; just click "Signin With Google."
+    </h4>
+    
+    <div class="row">
+        <div class="col">
+                
+                <input id="loginEmail" class="form-control" type="text" [(ngModel)]="email" 
+                    style="margin-bottom:5px;" placeholder="Your Email Address">
+                
+                <input id="loginPassword" class="form-control" type="password" [(ngModel)]="password" 
+                    placeholder="Your Password">
+
+                <button class="btn btn-primary" (click)="login()" 
+                    style="margin-top:5px; margin-right:5px; margin-bottom:5px;">
+                    Login
+                </button>
+
+                <button class="btn btn-warning" (click)="signup()" 
+                    style="margin-top:5px; margin-right:5px; margin-bottom:5px;">
+                    Signup
+                </button>
+
+                <button class="btn btn-info" (click)="googleSignin()" 
+                    style="margin-top:5px; margin-right:5px; margin-bottom:5px;">
+                    Signin with Google
+                </button>
+
+                <button class="btn btn-danger" (click)="resetPassword()" 
+                    style="margin-top:5px; margin-right:5px; margin-bottom:5px;">
+                    Reset Password
+                </button>
+                
+                
+        </div>
+    </div>  
+</div>

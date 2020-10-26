@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Ticket } from "../models/Ticket";
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 //FormsModule does not have to be imported here as long as it is in app.module.ts
 //import { FormsModule } from '@angular/forms';
 
@@ -26,13 +28,16 @@ export class TicketsComponent {
   editOnSwitch: boolean = false;
   currentUserEmail: string;
  
-  constructor(private crudRepository: CrudRepository) { 
+  constructor(private crudRepository: CrudRepository, private authService: AuthService,
+    private router:Router) { 
     
   }//End of Constructor
 
 
   logout() {
-    window.location.reload(true); 
+    this.authService.logout();
+    this.router.navigateByUrl("/logging");
+    //window.location.reload(true); 
   }
 
   addTicket() {

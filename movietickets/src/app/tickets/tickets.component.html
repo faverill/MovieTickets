@@ -18,6 +18,10 @@
                 <button class="btn btn-primary" (click) = "addTicket()">
                     Save Ticket
                 </button><br/>
+                <button style="margin-top:4px;" class="btn btn-danger" (click) = "logout()"
+                style="margin-top:4px; margin-bottom:5px;">
+                Logout
+            </button>
             </div>
             <div [style.display]="editOnSwitch ? 'block' : 'none'">
                 <button style="margin-top:4px;" class="btn btn-primary" (click) = "updateTicket()">
@@ -29,6 +33,7 @@
                 <button style="margin-top:4px;" class="btn btn-info" (click) = "cancelTicket()">
                     Cancel
                 </button>
+                
             </div>
         </div>
     </div>
