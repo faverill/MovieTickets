@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 //import { FormsModule } from '@angular/forms';
 
 import { CrudRepository } from "../services/crud.repository";
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-root',
@@ -23,13 +24,75 @@ export class TicketsComponent {
   ticketPhoneNumber: string;
   ticketNumberOfPeople: number;
   ticketRegistrationDate: number;
+  ticketRegistrarId: string;
 
 
   editOnSwitch: boolean = false;
   currentUserEmail: string;
+  currentUserId: string;
+  currentUserName: string;
+  notAdmin: boolean = true;
  
   constructor(private crudRepository: CrudRepository, private authService: AuthService,
-    private router:Router) { 
+    private router:Router, private myAuth: AngularFireAuth) { 
+
+      this.myAuth.onIdTokenChanged(auth => {
+          
+
+        if( auth != null){
+  
+          
+          this.currentUserId = auth.uid;
+          // auth.displayName == null for a new user. I suspect the 
+          // return value.user.updateProfile({displayName: userName}); in auth.service
+          // does not complete before onIdTokenChanged below fires.
+          if( auth.displayName != null ) {
+            this.currentUserName = auth.displayName;
+          } else {
+            console.log("Logged in with auth.displayName = null");
+          }
+          console.log("In tickets.component ======>");
+          console.log("Logged in as this.userName = " + this.currentUserName);
+          console.log("user is = " + auth.uid);
+          console.log("auth.email = " + auth.email);
+          this.currentUserEmail = auth.email;
+          this.currentUserId = auth.uid;
+  
+          //this.loginIsVisible = false;  //normally false
+          //this.editIsVisible = false;  //????
+          
+          //this.loadChildren();
+          auth.getIdTokenResult().then(idTokenResult => {
+            
+            //console.log("idTokenResult.claims:");
+            //console.log(idTokenResult.claims);
+            if( idTokenResult.claims.admin) {
+              this.notAdmin = false;
+            } else {
+              this.notAdmin = true;
+            }
+            //this.loadChildren();
+          });
+  
+          //Hack to alert Angular that it needs to this.loadChildren()
+          /*
+          document.getElementById('lastName').focus();
+          document.getElementById('firstName').focus();
+          setTimeout(function(){ 
+            document.getElementById('lastName').focus();
+            document.getElementById('firstName').focus();
+            //alert("Hello"); 
+          }, 1000);
+          */
+          
+  
+        } else {
+          console.log("auth is null");
+          //this.router.navigateByUrl("/logging");
+        }
+      }) //End of this.myAuth
+
+      
     
   }//End of Constructor
 
@@ -41,17 +104,22 @@ export class TicketsComponent {
   }
 
   addTicket() {
-
+    
     if (this.ticketDataIsInvalid()){
       return;
     }
+
+    
+    console.log("In tickets.component with this.currentUserId = " + this.currentUserId);
+    this.ticketRegistrarId = this.currentUserId;
 
     this.ticketId = "";
     this.ticketRegistrationDate = Date.now();
     let ticket = new Ticket(this.ticketId,this.ticketFirstName,
                   this.ticketLastName,this.ticketEmailAddress,
                   this.ticketPhoneNumber,this.ticketNumberOfPeople,
-                  this.ticketRegistrationDate);
+                  this.ticketRegistrationDate, this.ticketRegistrarId);
+    this.tickets.push(ticket);
     this.crudRepository.saveTicket(ticket);
     this.cancelTicket();
 
@@ -79,7 +147,7 @@ export class TicketsComponent {
 
   editTicket(id:string) {
 
-    this.tickets = this.crudRepository.tickets;
+    //this.tickets = this.crudRepository.tickets;
     //this.tickets = this.listTickets;
     //console.log("In editTicket of tickets.component with this.tickets:");
     //console.log(this.tickets);
@@ -96,6 +164,7 @@ export class TicketsComponent {
         this.ticketPhoneNumber = this.tickets[i].ticketPhoneNumber;
         this.ticketNumberOfPeople = this.tickets[i].ticketNumberOfPeople;
         this.ticketRegistrationDate = this.tickets[i].ticketRegistrationDate;
+        this.ticketRegistrarId = this.tickets[i].ticketRegistrarId;
         break;
       }
     }
@@ -110,7 +179,7 @@ export class TicketsComponent {
     let ticket = new Ticket(this.ticketId,this.ticketFirstName,
                       this.ticketLastName,this.ticketEmailAddress,
                       this.ticketPhoneNumber,this.ticketNumberOfPeople,
-                      this.ticketRegistrationDate);
+                      this.ticketRegistrationDate,this.ticketRegistrarId);
     this.crudRepository.saveTicket(ticket);
     
     for (var i = 0; i<this.tickets.length; i++) {
@@ -122,6 +191,7 @@ export class TicketsComponent {
         this.tickets[i].ticketPhoneNumber = this.ticketPhoneNumber;
         this.tickets[i].ticketNumberOfPeople = this.ticketNumberOfPeople;
         this.tickets[i].ticketRegistrationDate = this.ticketRegistrationDate;
+        this.tickets[i].ticketRegistrarId = this.ticketRegistrarId;
         break;
       }
     }
@@ -139,6 +209,7 @@ export class TicketsComponent {
     this.ticketPhoneNumber = "";
     this.ticketNumberOfPeople = undefined;
     this.ticketRegistrationDate = undefined;
+    this.ticketRegistrarId = undefined;
   }
 
 

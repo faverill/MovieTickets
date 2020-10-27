@@ -32,7 +32,7 @@ export class LoggingComponent implements  OnInit{
   
   result: any;
   loggedInGoogle: boolean;
-  googleId : string = "BwaJawB1Mte0P2pX40Gr";
+  
   
 
   constructor(public authService: AuthService, public myAuth: AngularFireAuth, 

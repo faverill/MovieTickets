@@ -16,10 +16,12 @@ export class AuthService {
   //Is this being used???
   user: Observable<firebase.User>;
   //provider:any;
+  currentUserId: string;
 
   constructor(private firebaseAuth: AngularFireAuth,
       private router: Router) {
     this.user = firebaseAuth.authState;
+    //this.currentUserId = firebase.auth().currentUser.uid
     //this.provider = new firebase.auth.GoogleAuthProvider();
   }
 

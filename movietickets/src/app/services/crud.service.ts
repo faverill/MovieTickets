@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 import * as firebase from 'firebase/app';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 import { Ticket } from '../models/Ticket';
 
@@ -11,9 +12,15 @@ import { Ticket } from '../models/Ticket';
 })
 export class CrudService {
 
-  constructor(
-    private firestore: AngularFirestore
-  ) { }
+  currentUserId: string;
+  currentUserName: string;
+  currentUserEmail: string;
+  notAdmin: boolean = true;
+
+  constructor(private firestore: AngularFirestore, private myAuth: AngularFireAuth) { 
+
+    
+  }
 
   
   createNewTicket(ticket) {
@@ -25,6 +32,7 @@ export class CrudService {
       record["ticketPhoneNumber"] = ticket.ticketPhoneNumber;
       record["ticketNumberOfPeople"] = ticket.ticketNumberOfPeople;
       record["ticketRegistrationDate"] = ticket.ticketRegistrationDate;
+      record["ticketRegistrarId"] = ticket.ticketRegistrarId;
     return this.firestore.collection('Tickets').add(record);
   }
 
@@ -34,8 +42,8 @@ export class CrudService {
     return this.firestore.collection('Tickets').snapshotChanges();
   }
 
-  readSomeTickets(email: string) {
-    return firebase.firestore().collection('Tickets').where("ticketEmailAddress", "==", email ).get();
+  readSomeTickets(currentUserId: string) {
+    return firebase.firestore().collection('Tickets').where("ticketRegistrarId", "==", currentUserId ).get();
   }
   
   //This is also a listener, but only listens for changes in the where(X) category
