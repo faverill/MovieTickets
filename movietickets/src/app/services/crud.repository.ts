@@ -21,6 +21,7 @@ export class CrudRepository {
     ticketNumberOfPeople: number;
     ticketRegistrationDate: number;
     ticketRegistrarId: string;
+    ticketRegistrarName: string;
 
     notAdmin: boolean = true;
     currentUserId: string;
@@ -56,7 +57,7 @@ export class CrudRepository {
                 result.forEach(function(doc){
                   var myTicket  = new Ticket(doc.id, doc.data().ticketFirstName, doc.data().ticketLastName, doc.data().ticketEmailAddress,
                           doc.data().ticketPhoneNumber, doc.data().ticketNumberOfPeople,
-                          doc.data().ticketRegistrationDate,doc.data().ticketRegistrarId);
+                          doc.data().ticketRegistrationDate,doc.data().ticketRegistrarId,doc.data().ticketRegistrarName);
                   myTickets.push(myTicket);
                   
                   console.log("myTickets:");
@@ -79,7 +80,8 @@ export class CrudRepository {
                   ticketPhoneNumber: e.payload.doc.data()['ticketPhoneNumber'],
                   ticketNumberOfPeople: e.payload.doc.data()['ticketNumberOfPeople'],
                   ticketRegistrationDate: e.payload.doc.data()['ticketRegistrationDate'],
-                  ticketRegistrarId: e.payload.doc.data()['ticketRegistrarId']
+                  ticketRegistrarId: e.payload.doc.data()['ticketRegistrarId'],
+                  ticketRegistrarName: e.payload.doc.data()['ticketRegistrarName']
                 }
               })
               console.log("In constructor of crud.repository:");
@@ -95,7 +97,7 @@ export class CrudRepository {
 
     
     saveTicket(ticket:Ticket) {
-
+      console.log("In crud.repository with ticket.ticketId =")
       if (ticket.id == null || ticket.id == ""){
         this.crudService.createNewTicket(ticket).then(resp => {
           console.log("We added a ticket with resp:")

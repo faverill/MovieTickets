@@ -17,6 +17,7 @@ export class AuthService {
   user: Observable<firebase.User>;
   //provider:any;
   currentUserId: string;
+  currentUserName: string;
 
   constructor(private firebaseAuth: AngularFireAuth,
       private router: Router) {
@@ -108,6 +109,7 @@ export class AuthService {
 
 
   signup(email: string, password: string, userName: string) {
+    this.currentUserName = userName;
     this.firebaseAuth
       .createUserWithEmailAndPassword(email, password)
       .then(value => {

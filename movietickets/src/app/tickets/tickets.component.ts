@@ -17,7 +17,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 export class TicketsComponent {
   
   tickets: Ticket[];
-  ticketId: string = "";
+  id: string = "";
   ticketFirstName: string;
   ticketLastName: string;
   ticketEmailAddress: string;
@@ -25,7 +25,7 @@ export class TicketsComponent {
   ticketNumberOfPeople: number;
   ticketRegistrationDate: number;
   ticketRegistrarId: string;
-
+  ticketRegistrarName: string;
 
   editOnSwitch: boolean = false;
   currentUserEmail: string;
@@ -49,7 +49,8 @@ export class TicketsComponent {
           if( auth.displayName != null ) {
             this.currentUserName = auth.displayName;
           } else {
-            console.log("Logged in with auth.displayName = null");
+            this.currentUserName = authService.currentUserName;
+            console.log("Logged into tickets.component with this.currentUserName = " + this.currentUserName);
           }
           console.log("In tickets.component ======>");
           console.log("Logged in as this.userName = " + this.currentUserName);
@@ -112,13 +113,15 @@ export class TicketsComponent {
     
     console.log("In tickets.component with this.currentUserId = " + this.currentUserId);
     this.ticketRegistrarId = this.currentUserId;
+    this.ticketRegistrarName = this.currentUserName;
 
-    this.ticketId = "";
+    this.id = "";
     this.ticketRegistrationDate = Date.now();
-    let ticket = new Ticket(this.ticketId,this.ticketFirstName,
+    let ticket = new Ticket(this.id,this.ticketFirstName,
                   this.ticketLastName,this.ticketEmailAddress,
                   this.ticketPhoneNumber,this.ticketNumberOfPeople,
-                  this.ticketRegistrationDate, this.ticketRegistrarId);
+                  this.ticketRegistrationDate, this.ticketRegistrarId,
+                  this.ticketRegistrarName);
     this.tickets.push(ticket);
     this.crudRepository.saveTicket(ticket);
     this.cancelTicket();
@@ -136,12 +139,12 @@ export class TicketsComponent {
       }
       
     for (var i = 0; i<this.tickets.length; i++) {
-      if (this.tickets[i].id == this.ticketId) {
+      if (this.tickets[i].id == this.id) {
         this.tickets.splice(i,1);
         break;
       }
     }
-    this.crudRepository.deleteTicket(this.ticketId);
+    this.crudRepository.deleteTicket(this.id);
     this.cancelTicket();
   }
 
@@ -153,11 +156,12 @@ export class TicketsComponent {
     //console.log(this.tickets);
 
     this.editOnSwitch = true;
-    this.ticketId = id;
+    this.id = id;
     
     for (var i = 0; i<this.tickets.length; i++) {
       
       if (this.tickets[i].id == id) {
+        this.id = id;
         this.ticketFirstName = this.tickets[i].ticketFirstName;
         this.ticketLastName = this.tickets[i].ticketLastName;
         this.ticketEmailAddress = this.tickets[i].ticketEmailAddress;
@@ -165,6 +169,7 @@ export class TicketsComponent {
         this.ticketNumberOfPeople = this.tickets[i].ticketNumberOfPeople;
         this.ticketRegistrationDate = this.tickets[i].ticketRegistrationDate;
         this.ticketRegistrarId = this.tickets[i].ticketRegistrarId;
+        this.ticketRegistrarName = this.tickets[i].ticketRegistrarName;
         break;
       }
     }
@@ -176,14 +181,15 @@ export class TicketsComponent {
       return;
     }
     
-    let ticket = new Ticket(this.ticketId,this.ticketFirstName,
+    let ticket = new Ticket(this.id,this.ticketFirstName,
                       this.ticketLastName,this.ticketEmailAddress,
                       this.ticketPhoneNumber,this.ticketNumberOfPeople,
-                      this.ticketRegistrationDate,this.ticketRegistrarId);
+                      this.ticketRegistrationDate,this.ticketRegistrarId,
+                      this.ticketRegistrarName);
     this.crudRepository.saveTicket(ticket);
     
     for (var i = 0; i<this.tickets.length; i++) {
-      if (this.tickets[i].id == this.ticketId) {
+      if (this.tickets[i].id == this.id) {
         
         this.tickets[i].ticketFirstName = this.ticketFirstName;
         this.tickets[i].ticketLastName = this.ticketLastName;
@@ -202,7 +208,7 @@ export class TicketsComponent {
 
   cancelTicket() {
     this.editOnSwitch = false;
-    this.ticketId = "";
+    this.id = "";
     this.ticketFirstName = "";
     this.ticketLastName = "";
     this.ticketEmailAddress = "";

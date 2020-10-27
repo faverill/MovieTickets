@@ -7,11 +7,13 @@ export class Ticket {
     ticketNumberOfPeople: number;
     ticketRegistrationDate: number;
     ticketRegistrarId: string;
+    ticketRegistrarName: string;
 
     constructor(id: string, ticketFirstName: string, ticketLastName: string,
         ticketEmailAddress: string, ticketPhoneNumber: string,
         ticketNumberOfPeople: number, 
-        ticketRegistrationDate: number, ticketRegistrarId: string) {
+        ticketRegistrationDate: number, ticketRegistrarId: string,
+        ticketRegistrarName: string) {
         this.id = id;
         this.ticketFirstName = ticketFirstName;
         this.ticketLastName = ticketLastName;
@@ -20,5 +22,6 @@ export class Ticket {
         this.ticketNumberOfPeople = ticketNumberOfPeople;
         this.ticketRegistrationDate = ticketRegistrationDate;
         this.ticketRegistrarId = ticketRegistrarId;
+        this.ticketRegistrarName = ticketRegistrarName;
     }
 }

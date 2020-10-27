@@ -42,22 +42,24 @@
     <div>
         <table id="ticketRoster" class="table table-striped table-bordered table-sm">
             <thead>
-                <tr><th>#</th><th>First Name</th><th>Last Name</th>
+                <tr><th>#</th><th>Edit</th><th>First Name</th><th>Last Name</th>
                     <th>Email Address</th>
-                    <th>Mobile Phone</th><th>Number of People</th>
-                    <th>Registration Date</th><th>Edit</th></tr>
+                    <th>Mobile Phone</th><th>Number of People</th><th>Registrar Name</th>
+                    <th>Registration Date</th></tr>
             </thead>
             <tbody>
                 <tr *ngFor="let ticket of listTickets; let i = index">
                     <td>{{i+1}}</td>
+                    <td><button class="btn btn-info" 
+                        (click)="editTicket(ticket.id)">Edit</button></td>
                     <td>{{ticket.ticketFirstName}}</td>
                     <td>{{ticket.ticketLastName}}</td>
                     <td>{{ticket.ticketEmailAddress}}</td>
                     <td>{{ticket.ticketPhoneNumber}}</td>
                     <td>{{ticket.ticketNumberOfPeople}}</td>
+                    <td>{{ticket.ticketRegistrarName}}</td>
                     <td>{{ticket.ticketRegistrationDate | date:'short'}}</td>
-                    <td><button class="btn btn-info" 
-                        (click)="editTicket(ticket.id)">Edit</button></td>
+                    
                 </tr>
             </tbody>
         </table>

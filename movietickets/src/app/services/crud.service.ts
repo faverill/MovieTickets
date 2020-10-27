@@ -33,6 +33,7 @@ export class CrudService {
       record["ticketNumberOfPeople"] = ticket.ticketNumberOfPeople;
       record["ticketRegistrationDate"] = ticket.ticketRegistrationDate;
       record["ticketRegistrarId"] = ticket.ticketRegistrarId;
+      record["ticketRegistrarName"] = ticket.ticketRegistrarName;
     return this.firestore.collection('Tickets').add(record);
   }
 
@@ -93,6 +94,8 @@ export class CrudService {
       record["ticketPhoneNumber"] = ticket.ticketPhoneNumber;
       record["ticketNumberOfPeople"] = ticket.ticketNumberOfPeople;
       record["ticketRegistrationDate"] = ticket.ticketRegistrationDate;
+      record["ticketRegistrarId"] = ticket.ticketRegistrarId;
+      record["ticketRegistrarName"] = ticket.ticketRegistrarName;
     this.firestore.doc('Tickets/' + recordId).update(record);
   }
 
