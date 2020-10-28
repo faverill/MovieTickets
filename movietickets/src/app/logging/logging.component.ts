@@ -229,6 +229,8 @@ export class LoggingComponent implements  OnInit{
     if( this.thereAreBlanks(this.email, "You Email Address") ){
       return;
     }
+    alert("Please note that this only works if you are using email login. " +
+      "If you are using Google Signin, you must go through Google to change your password.");
     alert("Check your email for a link to reset your password. Please note that this " +
           "link will expire within the next hour, so respond as soon as you receive it.");
           
