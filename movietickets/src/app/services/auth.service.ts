@@ -18,6 +18,7 @@ export class AuthService {
   //provider:any;
   currentUserId: string;
   currentUserName: string;
+  isAdmin: boolean = false;
 
   constructor(private firebaseAuth: AngularFireAuth,
       private router: Router) {
@@ -34,6 +35,8 @@ export class AuthService {
     var provider = new firebase.auth.GoogleAuthProvider();
     
     firebase.auth().signInWithRedirect(provider);
+
+    
     
     
 
@@ -130,27 +133,7 @@ export class AuthService {
       .then(value => {
         console.log('Nice, it worked!');
         console.log('User logged in with user.id = ' + firebase.auth().currentUser.uid);
-        
-        var user = firebase.auth().currentUser;
         this.router.navigateByUrl("/tickets");
-        /*
-        var name: string = "";
-        if( user.email == "faverill45@gmail.com") {
-          name = "Frank (gmail) Averill";
-        } else if ( user.email == "elgin6445@yahoo.com") {
-          name = "Frank (yahoo) Averill";
-        } else {
-          name = "Frank (att) Averill";
-        }
-        */
-       /*
-        user.getIdTokenResult().then(idTokenResult => {
-          console.log(idTokenResult.claims);
-          console.log("idTokenResult.claims.admin = " + idTokenResult.claims.admin);
-        });
-        */
-        //console.log("UserName set to : " + name);
-        //return value.user.updateProfile( {displayName: name });
       })
       .catch(err => {
         console.log('Something went wrong:',err.message);

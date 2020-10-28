@@ -31,7 +31,9 @@ export class TicketsComponent {
   currentUserEmail: string;
   currentUserId: string;
   currentUserName: string;
-  notAdmin: boolean = true;
+  isAdmin: boolean = false;
+
+  adminEmail: string = "";
  
   constructor(private crudRepository: CrudRepository, private authService: AuthService,
     private router:Router, private myAuth: AngularFireAuth) { 
@@ -68,9 +70,9 @@ export class TicketsComponent {
             //console.log("idTokenResult.claims:");
             //console.log(idTokenResult.claims);
             if( idTokenResult.claims.admin) {
-              this.notAdmin = false;
+              this.isAdmin = true;
             } else {
-              this.notAdmin = true;
+              this.isAdmin = false;
             }
             //this.loadChildren();
           });
@@ -96,6 +98,21 @@ export class TicketsComponent {
       
     
   }//End of Constructor
+
+  createAdmin() {
+    alert("In createAdmin in ticket.component");
+    this.authService.createAdmin(this.adminEmail);
+    this.adminEmail = "";
+
+  };  //End of createAdmin
+
+  deleteAdmin() {
+    alert("deleteAdmin in createAdmin in ticket.component");
+    this.authService.deleteAdmin(this.adminEmail);
+    this.adminEmail = "";
+
+  };  //End of deleteAdmin
+
 
 
   logout() {

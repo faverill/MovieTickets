@@ -38,6 +38,31 @@
         </div>
     </div>
 
+    <div [style.display]="isAdmin ? 'block' : 'none'">
+        <div>
+            <h5>Since you are an admin, you may make others admins by entering their
+            email adddress below and clicking "Make Admin." You may also remove
+            someone from the admin role in a similar way.</h5>
+        </div>
+        
+        <div class="row">
+            <div class="col">
+                <input class="form-control makeAdmin"
+                        placeholder="Admin's Email" [(ngModel)]="adminEmail" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <button  class="btn btn-primary makeAdmin" 
+                        style="margin-bottom:5px; margin-top:5px;" 
+                        (click)="createAdmin()">Make Admin</button>
+                <button  class="btn btn-danger makeAdmin" 
+                        style="margin-bottom:5px; margin-top:5px; margin-left:5px;"
+                (click)="deleteAdmin()">Delete Admin</button><br/>
+            </div>
+        </div>
+        </div> <!-- end of [style.display]="isAdmin block -->
+        <br/><br/>
 
     <div>
         <table id="ticketRoster" class="table table-striped table-bordered table-sm">
