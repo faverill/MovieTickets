@@ -297,7 +297,11 @@ export class TicketsComponent {
     }
   }
 
+  /*
   phoneNumberIsInvalid(name: string, label: string) {
+    return this.phoneNumber(name);
+
+    
     //var a = name.trim();
     if (!String.prototype.trim) {
       String.prototype.trim = function () {
@@ -305,6 +309,7 @@ export class TicketsComponent {
       };
     }
 
+    
     var a = name.trim();
     //alert("carPhoneNumber = " + a);
     if (a == undefined || a == null || a.length < 10) {
@@ -314,6 +319,20 @@ export class TicketsComponent {
       return false;
     }
     
+  }
+  */
+
+  phoneNumberIsInvalid(phoneNumber: string, label: string){
+    //var phoneno = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+    var phoneno = /\d/g
+    if(phoneNumber.match(phoneno).length===10) { //Just checks for 10 digits
+      return false;
+    } else {
+      //alert("message");
+      alert(label + " does not seem to have the right number (i.e., 10)" + 
+          " of digits. Please re-enter " + label + ".");
+      return true;
+    }
   }
 
   ticketDataIsInvalid(){
